@@ -144,28 +144,43 @@
  *
  * Parsing typically gets broken down into two phases: Lexical Analysis and
  * Syntactic Analysis.
+ * 
+ * Parsing 通常被划分成两个阶段：Lexical Analysis （词法分析）和 Syntactic Analysis （语法分析）
  *
  * 1. *Lexical Analysis* takes the raw code and splits it apart into these things
  *    called tokens by a thing called a tokenizer (or lexer).
+ * 
+ *    *Lexical Analysis* 获取每一行代码，然后通过一个称为 tokenizer （令牌）的东西切割分解为名叫 token 的东西
  *
  *    Tokens are an array of tiny little objects that describe an isolated piece
  *    of the syntax. They could be numbers, labels, punctuation, operators,
  *    whatever.
+ *
+ *    Tokens 是一个描述词法单元的最小对象。它们可以是 numbers （数字）, labels（标签）, punctuation（标点符号）, operators（运算符）, 甚至别的东西
  *
  * 2. *Syntactic Analysis* takes the tokens and reformats them into a
  *    representation that describes each part of the syntax and their relation
  *    to one another. This is known as an intermediate representation or
  *    Abstract Syntax Tree.
  *
+ *    *Syntactic Analysis* 则是分解这些 tokens 和重新将他们抽象成描述语法的每一部分的关系。
+ *    这便是所谓的 intermediate representation （中间码）或  Abstract Syntax Tree （抽象语法树）
+ *
  *    An Abstract Syntax Tree, or AST for short, is a deeply nested object that
  *    represents code in a way that is both easy to work with and tells us a lot
  *    of information.
+ * 
+ *    Abstract Syntax Tree （抽象语法树），简称 AST，是一个描述代码的深度嵌套对象，更容易操作且能和告诉我们更多信息的方法
  *
  * For the following syntax:
+ * 
+ * 例如下面的语法：
  *
  *   (add 2 (subtract 4 2))
  *
  * Tokens might look something like this:
+ * 
+ * Tokens 看起来大概是这样的：
  *
  *   [
  *     { type: 'paren',  value: '('        },
@@ -181,6 +196,7 @@
  *
  * And an Abstract Syntax Tree (AST) might look like this:
  *
+ * 和 Abstract Syntax Tree (AST) 看起来大概是这样的：
  *   {
  *     type: 'Program',
  *     body: [{
@@ -214,6 +230,8 @@
  * language.
  *
  * Let’s look at how we would transform an AST.
+ * 
+ * 那么让我们来一起看一下如何转换 AST 。
  *
  * You might notice that our AST has elements within it that look very similar.
  * There are these objects with a type property. Each of these are known as an
@@ -393,9 +411,13 @@
 /**
  * We're gonna start off with our first phase of parsing, lexical analysis, with
  * the tokenizer.
+ * 
+ * 我们将从解析的第一阶段 parsing, lexical analysis 以及 tokenizer 开始
  *
  * We're just going to take our string of code and break it down into an array
  * of tokens.
+ * 
+ * 我们只需要接收我们编写的代码字符串，然后将其分解成一个 tokens 的数组
  *
  *   (add 2 (subtract 4 2))   =>   [{ type: 'paren', value: '(' }, ...]
  */
@@ -418,6 +440,7 @@ function tokenizer(input) {
   while (current < input.length) {
 
     // We're also going to store the `current` character in the `input`.
+    // 我们需要将 `current` 的字符存储起来 
     let char = input[current];
 
     // The first thing we want to check for is an open parenthesis. This will
@@ -435,15 +458,18 @@ function tokenizer(input) {
       });
 
       // Then we increment `current`
+      // 然后我们需要递增 `current`
       current++;
 
       // And we `continue` onto the next cycle of the loop.
+      // 接着我们需要继续处理下一个循环的周期
       continue;
     }
 
     // Next we're going to check for a closing parenthesis. We do the same exact
     // thing as before: Check for a closing parenthesis, add a new token,
     // increment `current`, and `continue`.
+    // 我们需要检查是否为一个闭合的标点符号。
     if (char === ')') {
       tokens.push({
         type: 'paren',
@@ -554,6 +580,7 @@ function tokenizer(input) {
 
     // Finally if we have not matched a character by now, we're going to throw
     // an error and completely exit.
+    // 最后如果我们没有匹配的方法处理当前这个，那么我们需要抛出这个错误，接着退出编译
     throw new TypeError('I dont know what this character is: ' + char);
   }
 

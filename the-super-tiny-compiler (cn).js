@@ -239,6 +239,8 @@
  * isolated part of the tree.
  *
  * We can have a node for a "NumberLiteral":
+ * 
+ * 我们可以持有一个 "NumberLiteral" 的节点
  *
  *   {
  *     type: 'NumberLiteral',
@@ -246,6 +248,8 @@
  *   }
  *
  * Or maybe a node for a "CallExpression":
+ * 
+ * 或者这是一个 "CallExpression" 的节点
  *
  *   {
  *     type: 'CallExpression',
@@ -260,6 +264,8 @@
  *
  * Since we’re targeting a new language, we’re going to focus on creating an
  * entirely new AST that is specific to the target language.
+ * 
+ * 因为我们的目标是创建一种新的语言，所以我们需要聚焦于创建一个完全的新的有针对性目标语言的 AST 。
  *
  * Traversal
  * ---------
@@ -291,6 +297,7 @@
  *   }
  *
  * So for the above AST we would go:
+ * 所以对于上面的 AST，我们需要继续下面的功能：
  *
  *   1. Program - Starting at the top level of the AST
  *   2. CallExpression (add) - Moving to the first element of the Program's body
@@ -427,6 +434,7 @@
 function tokenizer(input) {
 
   // A `current` variable for tracking our position in the code like a cursor.
+  // `current` 变量类似一个游标用于追踪我们的代码的位置
   let current = 0;
 
   // And a `tokens` array for pushing our tokens to.
@@ -435,8 +443,13 @@ function tokenizer(input) {
   // We start by creating a `while` loop where we are setting up our `current`
   // variable to be incremented as much as we want `inside` the loop.
   //
+  // 接着我们需要创建一个 `while` 的循环，在其中我们需要设置 `current` 变量伴随循环而逐步递增
+  //
   // We do this because we may want to increment `current` many times within a
   // single loop because our tokens can be any length.
+  //
+  // 这样做是因为我们需要
+  //
   while (current < input.length) {
 
     // We're also going to store the `current` character in the `input`.
@@ -484,8 +497,14 @@ function tokenizer(input) {
     // isn't actually important for us to store as a token. We would only throw
     // it out later.
     //
+    // 前进，现在我们需要检查空格。这挺有意思的，因为我们关注空格的存在是用来分隔字符的，可事实上我们并不需要将它作为一个 token 存储。
+    // 我们只需把她丢弃
+    //
     // So here we're just going to test for existence and if it does exist we're
     // going to just `continue` on.
+    //
+    // 所以这里我们只需要将它匹配出来，然后 `continue` 跳过即可
+    //
     let WHITESPACE = /\s/;
     if (WHITESPACE.test(char)) {
       current++;
@@ -495,6 +514,8 @@ function tokenizer(input) {
     // The next type of token is a number. This is different than what we have
     // seen before because a number could be any number of characters and we
     // want to capture the entire sequence of characters as one token.
+    //
+    // 接下来的 token 类型是 number （数字）。
     //
     //   (add 123 456)
     //        ^^^ ^^^
@@ -545,9 +566,11 @@ function tokenizer(input) {
       }
 
       // Skip the closing double quote.
+      // 跳过结尾的双引号
       char = input[++current];
 
       // And add our `string` token to the `tokens` array.
+      // 接着添加 `string` 的 token 到 `tokens` 的数组中
       tokens.push({ type: 'string', value });
 
       continue;
@@ -556,6 +579,9 @@ function tokenizer(input) {
     // The last type of token will be a `name` token. This is a sequence of
     // letters instead of numbers, that are the names of functions in our lisp
     // syntax.
+    // 
+    // 最后的 token 的类型将是名为 `name` 的 token。这是一种用字母取代数字的序列，
+    // 这便是我们 lisp 语法的函数名称
     //
     //   (add 2 4)
     //    ^^^
@@ -585,6 +611,7 @@ function tokenizer(input) {
   }
 
   // Then at the end of our `tokenizer` we simply return the tokens array.
+  // 在 `tokenizer` 的最后，我们只需返回 tokens 的数组即可
   return tokens;
 }
 
@@ -603,20 +630,27 @@ function tokenizer(input) {
  */
 
 // Okay, so we define a `parser` function that accepts our array of `tokens`.
+// Ok，接着我们定义一个名为 `parser` 的函数用来接收我们的 `tokens` 数组
 function parser(tokens) {
 
   // Again we keep a `current` variable that we will use as a cursor.
+  // 那么我们再次定义一个 `current` 变量作为游标
   let current = 0;
 
   // But this time we're going to use recursion instead of a `while` loop. So we
   // define a `walk` function.
+  //
+  //但是这次我们将使用 recursion（递归）来代替 `while` 循环。所以我们需要定义一个 `walk` 函数
   function walk() {
 
     // Inside the walk function we start by grabbing the `current` token.
+    // 在 `walk` 函数内部，我们需要获取 `current` 的 token
     let token = tokens[current];
 
     // We're going to split each type of token off into a different code path,
     // starting off with `number` tokens.
+    //
+    // 我们需要将每一种类型的 token 划分进不同的 code path 中，那么先从 `number` 的 token 开始
     //
     // We test to see if we have a `number` token.
     if (token.type === 'number') {
@@ -715,16 +749,19 @@ function parser(tokens) {
       current++;
 
       // And return the node.
+      // 返回当前的 node
       return node;
     }
 
     // Again, if we haven't recognized the token type by now we're going to
     // throw an error.
+    // 再者，如果是我们并未识别到的 token 的类型，那么我们需要抛出一个错误
     throw new TypeError(token.type);
   }
 
   // Now, we're going to create our AST which will have a root which is a
   // `Program` node.
+  // 现在，我们需要创建我们的 AST，从一个作为根节点的 `Program` 的节点开始
   let ast = {
     type: 'Program',
     body: [],
@@ -744,6 +781,7 @@ function parser(tokens) {
   }
 
   // At the end of our parser we'll return the AST.
+  // 在最后，我们只需返回 AST
   return ast;
 }
 
@@ -758,6 +796,8 @@ function parser(tokens) {
  * So now we have our AST, and we want to be able to visit different nodes with
  * a visitor. We need to be able to call the methods on the visitor whenever we
  * encounter a node with a matching type.
+ * 
+ * 那么现在我们拥有了我们的 AST
  *
  *   traverse(ast, {
  *     Program: {
@@ -803,6 +843,8 @@ function traverser(ast, visitor) {
 
   // `traverseNode` will accept a `node` and its `parent` node. So that it can
   // pass both to our visitor methods.
+  // `traverseNode` 将接收一个 `node` 和它的 `parent` 节点。因此，
+  //
   function traverseNode(node, parent) {
 
     // We start by testing for the existence of a method on the visitor with a

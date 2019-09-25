@@ -379,6 +379,10 @@
  * The final phase of a compiler is code generation. Sometimes compilers will do
  * things that overlap with transformation, but for the most part code
  * generation just means take our AST and string-ify code back out.
+ * 
+ * 编译器的最后便是 code generation （代码生成）。
+ * 有时候，一些 compiler 让 code generation 与 transformation 做重叠的事情，
+ * 但是大部分情况是 code generation 只是意味着处理 AST 和 返回代码的字符
  *
  * Code generators work several different ways, some compilers will reuse the
  * tokens from earlier, others will have created a separate representation of
@@ -392,20 +396,33 @@
 
 /**
  * And that's it! That's all the different pieces of a compiler.
+ * 
+ * 就是这样！这便是 compiler（编译器）的所有不同的部分
  *
  * Now that isn’t to say every compiler looks exactly like I described here.
  * Compilers serve many different purposes, and they might need more steps than
  * I have detailed.
+ * 
+ * 但是并不是说所有的 compiler 看起来都像我描述的这样。
+ * compilers 有着许多用途，它们可能比我介绍的有更多步骤
  *
  * But now you should have a general high-level idea of what most compilers look
  * like.
+ * 
+ * 但现在你应该知道大多数的编译器的概念看起来就是这样。
  *
  * Now that I’ve explained all of this, you’re all good to go write your own
  * compilers right?
+ * 
+ * 那么我已经解释了编译器的所有部分，现在你也可以写自己的编译器了把？
  *
  * Just kidding, that's what I'm here to help with :P
+ * 
+ * 只是开个玩笑，这就是我在此为你提供的帮助的目的 :P
  *
  * So let's begin...
+ * 
+ * 那么让我们开始吧...
  */
 
 /**
@@ -431,6 +448,7 @@
 
 // We start by accepting an input string of code, and we're gonna set up two
 // things...
+// 一开始我们需解释代码的输入，然后设置两个东西...
 function tokenizer(input) {
 
   // A `current` variable for tracking our position in the code like a cursor.
@@ -438,6 +456,7 @@ function tokenizer(input) {
   let current = 0;
 
   // And a `tokens` array for pushing our tokens to.
+  // `tokens` 数组用来承载我们的 `tokens`
   let tokens = [];
 
   // We start by creating a `while` loop where we are setting up our `current`
@@ -553,13 +572,16 @@ function tokenizer(input) {
     // We'll start by checking for the opening quote:
     if (char === '"') {
       // Keep a `value` variable for building up our string token.
+      // 声明一个 `value` 变量用来构建我们的 `string` 的 token
       let value = '';
 
       // We'll skip the opening double quote in our token.
+      // 我们需要跳过当前的双引号在我们的 token 中
       char = input[++current];
 
       // Then we'll iterate through each character until we reach another
       // double quote.
+      // 然后我们需要遍历每一个字符直到我们遇到另一个双引号
       while (char !== '"') {
         value += char;
         char = input[++current];
@@ -593,12 +615,14 @@ function tokenizer(input) {
 
       // Again we're just going to loop through all the letters pushing them to
       // a value.
+      // 同样的，我们只需不断变量将所有的字母推入到 `value` 中
       while (LETTERS.test(char)) {
         value += char;
         char = input[++current];
       }
 
       // And pushing that value as a token with the type `name` and continuing.
+      // 接着只需将类型为 `name` 的  token 的值推入 tokens ，然后继续
       tokens.push({ type: 'name', value });
 
       continue;
@@ -770,6 +794,8 @@ function parser(tokens) {
   // And we're going to kickstart our `walk` function, pushing nodes to our
   // `ast.body` array.
   //
+  // 接着我们将启动我们的 `walk` 的函数，然后将我们的 `ast.body` 数组的节点推入其中
+  //
   // The reason we are doing this inside a loop is because our program can have
   // `CallExpression` after one another instead of being nested.
   //
@@ -831,10 +857,13 @@ function parser(tokens) {
 
 // So we define a traverser function which accepts an AST and a
 // visitor. Inside we're going to define two functions...
+// 因此现在我们定义一个 `traverser` 函数用来接收 AST 和 一个 visitor。
+// 同时在内部我们将定义两个函数.....
 function traverser(ast, visitor) {
 
   // A `traverseArray` function that will allow us to iterate over an array and
-  // call the next function that we will define: `traverseNode`.
+  // call the next function that we will define: `traverseArray`.
+  // `traverseArray` 函数将允许我们遍历一个数组，并调用我们接下来定义的一个 `traverseArray` 函数
   function traverseArray(array, parent) {
     array.forEach(child => {
       traverseNode(child, parent);
@@ -948,10 +977,12 @@ function traverser(ast, visitor) {
  */
 
 // So we have our transformer function which will accept the lisp ast.
+// 因此我们需要构建一个用于接收 Lisp 的 AST 的函数
 function transformer(ast) {
 
   // We'll create a `newAst` which like our previous AST will have a program
   // node.
+  // 我们需要创建一个新的像我们此前的拥有一个 `program` 的节点的 `AST`, 
   let newAst = {
     type: 'Program',
     body: [],
@@ -970,6 +1001,7 @@ function transformer(ast) {
   traverser(ast, {
 
     // The first visitor method accepts any `NumberLiteral`
+    // 第一个 visitor 方法需要处理任意的 `NumberLiteral`
     NumberLiteral: {
       // We'll visit them on enter.
       enter(node, parent) {
@@ -993,11 +1025,13 @@ function transformer(ast) {
     },
 
     // Next up, `CallExpression`.
+    // 接下来，`CallExpression`。
     CallExpression: {
       enter(node, parent) {
 
         // We start creating a new node `CallExpression` with a nested
         // `Identifier`.
+        // 我们开始创建一个拥有 `Identifier` 的嵌套的新的 `CallExpression` 的节点
         let expression = {
           type: 'CallExpression',
           callee: {
@@ -1046,14 +1080,19 @@ function transformer(ast) {
 
 /**
  * Now let's move onto our last phase: The Code Generator.
+ * 
+ * 现在让我们前进到我们的最后一个阶段: Code Generator （代码生成）
  *
  * Our code generator is going to recursively call itself to print each node in
  * the tree into one giant string.
+ * 
+ * 我们的代码生成器是需要递归调用自己来对每一个 AST 中的 `node` 生成对应的代码字符串
  */
 
 function codeGenerator(node) {
 
   // We'll break things down by the `type` of the `node`.
+  // 我们现在需要依据 `node` 的类型来进行对应的处理
   switch (node.type) {
 
     // If we have a `Program` node. We will map through each node in the `body`
@@ -1084,18 +1123,22 @@ function codeGenerator(node) {
       );
 
     // For `Identifier` we'll just return the `node`'s name.
+    // 对于 `Identifier` 我们只需返回 `node` 的名称即可
     case 'Identifier':
       return node.name;
 
     // For `NumberLiteral` we'll just return the `node`'s value.
+    // 对于 `NumberLiteral` 我们只需返回 `node` 的值即可
     case 'NumberLiteral':
       return node.value;
 
     // For `StringLiteral` we'll add quotations around the `node`'s value.
+    // 对于 `StringLiteral` 我们需要返回 `node` 添加引号之后的值即可
     case 'StringLiteral':
       return '"' + node.value + '"';
 
     // And if we haven't recognized the node, we'll throw an error.
+    // 而如果我们无法识别这个 `node` ，那么我只需抛出这个错误
     default:
       throw new TypeError(node.type);
   }
@@ -1111,6 +1154,8 @@ function codeGenerator(node) {
 /**
  * FINALLY! We'll create our `compiler` function. Here we will link together
  * every part of the pipeline.
+ * 
+ * 之后，我们将创建我们的 `compiler` 函数。在这里，我们将把 pipeline 的每一部分链接起来
  *
  *   1. input  => tokenizer   => tokens
  *   2. tokens => parser      => ast
@@ -1125,6 +1170,7 @@ function compiler(input) {
   let output = codeGenerator(newAst);
 
   // and simply return the output!
+  // 接着只需返回 output 即可
   return output;
 }
 
@@ -1136,7 +1182,7 @@ function compiler(input) {
  */
 
 // Now I'm just exporting everything...
-// 现在我只是导出这些函数......
+// 现在只需导出这些函数即可......
 module.exports = {
   tokenizer,
   parser,

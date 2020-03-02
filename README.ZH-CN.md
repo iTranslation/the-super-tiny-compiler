@@ -1,44 +1,39 @@
 [![The Super Tiny Compiler](https://cloud.githubusercontent.com/assets/952783/21579290/5755288a-cf75-11e6-90e0-029529a44a38.png)](the-super-tiny-compiler.js)
 
-**_Welcome to The Super Tiny Compiler!_**
+**_欢迎来到最小编译器的教程!_**
 
-This is an ultra-simplified example of all the major pieces of a modern compiler
-written in easy to read JavaScript.
+这是基于简单易读的 Javascript 来编写的现代编译器的主要部分的超级简化示例。
 
-Reading through the guided code will help you learn about how _most_ compilers
-work from end to end.
+通过阅读这些指导性的代码有助于你学习更多编译器从头到尾的工作方式。
 
-### [Want to jump into the code? Click here](the-super-tiny-compiler.js)
+### [想直接阅读代码？点击这](the-super-tiny-compiler.js)
 
-### [You can also check it out on Glitch](https://the-super-tiny-compiler.glitch.me/)
+### [您也可以在 Glitch 上查看](https://the-super-tiny-compiler.glitch.me/)
 
 ---
 
-### Why should I care?
+### 什么是我应该关心的？
 
-That's fair, most people don't really have to think about compilers in their day
-jobs. However, compilers are all around you, tons of the tools you use are based
-on concepts borrowed from compilers.
+一般来说，大多数人在他们的日常工作中并不需要去思考编译器是如何工作的。但是，编译器无处不在，你所使用的工具都是借助了编译器的概念。
 
-### But compilers are scary!
+### 但编译器是可怕的！
 
-Yes, they are. But that's our fault (the people who write compilers), we've
-taken something that is reasonably straightforward and made it so scary that
-most think of it as this totally unapproachable thing that only the nerdiest of
-the nerds are able to understand.
+是的，的确如此。但，这是我们这些写编译器的人的错，我们采用了相当简单明了的方法，才导致编译器如此可怕，以至于别人会认为这是完全无法实现的，只要书呆子可以理解它。
 
-### Okay so where do I begin?
+### OK，那我需要在哪里开始呢？
 
 Awesome! Head on over to the [the-super-tiny-compiler.js](the-super-tiny-compiler.js)
 file.
 
-### I'm back, that didn't make sense
+Awesome! 从 [the-super-tiny-compiler.js](the-super-tiny-compiler.js) 开始。
 
-Ouch, I'm really sorry. Let me know how it can be improved.
+### I'm back, 这是不行的。
 
-### Tests
+深感抱歉。让我们先从怎么运行开始。
 
-Run with `node test.js`
+### 测试
+
+运行 `node test.js`
 
 ---
 

@@ -335,6 +335,7 @@
  *
  * In order to make this useful we will also pass the node and a reference to
  * the parent node.
+ * 为了能够有效，我们还需传递节点本身和它的父节点的引用
  *
  *   var visitor = {
  *     NumberLiteral(node, parent) {},
@@ -343,6 +344,7 @@
  *
  * However, there also exists the possibility of calling things on "exit". Imagine
  * our tree structure from before in list form:
+ * 无论如何，这里也存在 “exit” 的时候需要调用的东西。想像一下我们的列表形式的 Tree 结构：
  *
  *   - Program
  *     - CallExpression
@@ -354,6 +356,8 @@
  * As we traverse down, we're going to reach branches with dead ends. As we
  * finish each branch of the tree we "exit" it. So going down the tree we
  * "enter" each node, and going back up we "exit".
+ * 当我们一直向下遍历的时候，我们有可能到达一个死胡同一样的分支。当我们遍历完 Tree 的每一个分支的时候，我们需要 “exit”。
+ * 因此，沿着 Tree 向下来，我们“输入”每个节点，然后回溯回去到 “exit”。
  *
  *   -> Program (enter)
  *     -> CallExpression (enter)
@@ -369,6 +373,7 @@
  *   <- Program (exit)
  *
  * In order to support that, the final form of our visitor will look like this:
+ * 为了支持这些，最终我们的 visitor 看起来是下面这样的：
  *
  *   var visitor = {
  *     NumberLiteral: {
@@ -394,10 +399,13 @@
  * tokens from earlier, others will have created a separate representation of
  * the code so that they can print node linearly, but from what I can tell most
  * will use the same AST we just created, which is what we’re going to focus on.
+ * 代码生成器有几种不同的工作方式，一些编译器会重用之前的 Token，其他的一些编译器则会创建一种额外的代码表示方式来便于节点的打印。
+ * 但我将会使用我们刚刚创建的 AST ，这就是我们要重点关注的。
  *
  * Effectively our code generator will know how to “print” all of the different
  * node types of the AST, and it will recursively call itself to print nested
  * nodes until everything is printed into one long string of code.
+ * 我们的代码生成器将知道如何有效的 “print”  AST的所有不同的节点，并且它可以递归的调用自身来打印嵌套的节点，直到所有内容都打印完成。
  */
 
 /**
